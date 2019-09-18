@@ -1,0 +1,143 @@
+/* 看板公共样式 */
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+li {
+  list-style: none
+}
+
+label {
+  margin-right: 12px;
+}
+
+.right-operate {
+  float: right;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.right-operate span {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-top: 12px;
+  border: 1px solid #797979;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.right-operate span:hover {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+}
+
+.right-operate span.active {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+}
+
+.right-operate span.active:hover {
+  background: #40a9ff;
+  border: 1px solid #40a9ff;
+}
+
+.pp-checkboxs label {
+  margin-right: 12px;
+}
+
+.pp-checkboxs input {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.pp-dashboard-wrapper .title {
+  background: #d7d7d7;
+}
+
+.pp-dashboard-wrapper .title h3 {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 6px 0 6px 12px;
+  font-weight: normal;
+  font-size: 12px;
+  border: 1px solid #797979;
+  border-radius: 4px;
+}
+
+label {
+  font-size: 12px;
+}
+
+.query-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 0;
+}
+
+.query-header p {
+  width: 60px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.query-header p:hover {
+  background: #40a9ff;
+  border: 1px solid #40a9ff;
+  color: #fff;
+}
+
+.no-data {
+  margin-top: 120px;
+  text-align: center;
+}
+
+/* 看板样式 */
+.pp-dashboard-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 10px;
+}
+
+.pp-checkboxs {
+  width: 100%;
+}
+
+.handle-content,
+.account-number-content,
+.controversy-content,
+.top10-content {
+  width: 50%;
+  padding: 5px;
+}
+
+.pp-dashboard-wrapper #account-number-chart,
+.pp-dashboard-wrapper #handle-chart,
+.pp-dashboard-wrapper #controversy-chart,
+.pp-dashboard-wrapper #top10-chart {
+  overflow-x: hidden;
+  height: calc((100vh - 220px) / 2);
+  min-height: 400px;
+}
+
+#top10-chart li {
+  padding: 6px 0 6px 22px;
+  font-size: 15px;
+}
+#top10-chart li svg {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 8px;
+}

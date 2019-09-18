@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>work - dashboard</title>
+  <link rel="stylesheet" href="./index.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="./echarts-en.min.js"></script>
+</head>
+<body>
+<div class='pp-dashboard-wrapper'>
+  <div class="query-header">
+    <div class="pp-checkboxs"></div>
+    <p class='query-btn'>查询</p>
+  </div>
+  <div class="account-number-content groups-box">
+    <div class='title'>
+      <h3>PP账号数据分布情况</h3>
+      <div class='right-operate' data-type='0'>
+        <span data-query-type='DP' data-type='0' class='active'>DP占比</span>
+        <span data-query-type='BC' data-type='0'>BC占比</span>
+        <span data-query-type='CC' data-type='0'>CC占比</span>
+      </div>
+    </div>
+    <div id="account-number-chart"></div>
+  </div>
+  <div class="handle-content groups-box">
+    <div class='title'>
+      <h3>PP处理情况</h3>
+      <div class='right-operate' data-type='1'>
+        <span data-query-type='today' data-type='1' class='active'>今日</span>
+        <span data-query-type='week' data-type='1'>本周</span>
+        <span data-query-type='month' data-type='1'>本月</span>
+        <span data-query-type='threeMonth' data-type='1'>近三月</span>
+        <span data-query-type='sixMonth' data-type='1'>近半年</span>
+      </div>
+    </div>
+    <div id="handle-chart"></div>
+  </div>
+  <div class="controversy-content groups-box">
+    <div class='title'>
+      <h3>争议原因占比</h3>
+      <div class='right-operate' data-type='2'>
+        <span data-query-type='today' data-type='2' class='active'>今日</span>
+        <span data-query-type='week' data-type='2'>本周</span>
+        <span data-query-type='month' data-type='2'>本月</span>
+        <span data-query-type='threeMonth' data-type='2'>近三月</span>
+        <span data-query-type='sixMonth' data-type='2'>近半年</span>
+      </div>
+    </div>
+    <div id="controversy-chart"></div>
+  </div>
+  <div class="top10-content groups-box">
+    <div class='title'>
+      <h3>今日排行榜TOP10</h3>
+    </div>
+    <ul id="top10-chart"></ul>
+  </div>
+</div>
+<script src=./index.js></script>
+</body>
+</html>
