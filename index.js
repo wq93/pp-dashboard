@@ -19,22 +19,41 @@
   }
 
   // 返回时间间隔时间戳(秒)
+  // var queryTypeMap = {
+  //   'today': function () {
+  //     return ((new Date(new Date().toLocaleDateString()).getTime()) / 1000).toFixed(0);
+  //   },
+  //   'week': function () {
+  //     return ((getTodayTime() - 7 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
+  //   },
+  //   'month': function () {
+  //     return ((getTodayTime() - 30 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
+  //   },
+  //   'threeMonth': function () {
+  //     return ((getTodayTime() - 90 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
+  //   },
+  //   'sixMonth': function () {
+  //     return ((getTodayTime() - 182 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
+  //   },
+  // }
   var queryTypeMap = {
-    'today': function () {
-      return ((new Date(new Date().toLocaleDateString()).getTime()) / 1000).toFixed(0);
-    },
-    'week': function () {
-      return ((getTodayTime() - 7 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
-    },
-    'month': function () {
-      return ((getTodayTime() - 30 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
-    },
-    'threeMonth': function () {
-      return ((getTodayTime() - 90 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
-    },
-    'sixMonth': function () {
-      return ((getTodayTime() - 182 * 24 * 60 * 60 * 1000) / 1000).toFixed(0);
-    },
+    'today': 'TODAY',
+    'week': 'THIS_WEEK',
+    'month': 'THIS_MONTH',
+    'threeMonth': 'LAST_THREE_MONTH',
+    'sixMonth': 'LAST_HALF_YEAR',
+  }
+
+  // 显示暂无数据
+  var showNoData = function (className) {
+    $(`#${className}-chart`).hide();
+    $(`.${className}-no-data`).show();
+  }
+
+  // 隐藏暂无数据
+  var hideNoData = function (className) {
+    $(`#${className}-chart`).show();
+    $(`.${className}-no-data`).hide();
   }
 
   // 刷新模块方法
@@ -61,78 +80,79 @@
   var getPPList = function () {
     $.ajax({
       type: "GET",
-      url: '/api/displayPlatFrom/get/groups',
+      url: '/api/dashboard/get/paypalAccountList',
       dataType: "json",
       success: function (data) {
         ppList = data.item.businessUnit;
-        renderSelectPP();
 
         // 请求模块数据
         getAccountNumberData();
         getHandleData();
         getControversyData();
         getTopData();
+        // 渲染pp列表
+        renderSelectPP();
       },
       error: function (jqXHR) {
 
 
-        ppList = [
-          {
-            id: 1,
-            name: 'sw1@pp.com'
-          },
-          {
-            id: 2,
-            name: 'sw2@pp.com'
-          },
-          {
-            id: 3,
-            name: 'sw3@pp.com'
-          },
-          {
-            id: 4,
-            name: 'sw4@pp.com'
-          },
-          {
-            id: 5,
-            name: 'sw5@pp.com'
-          },
-          {
-            id: 6,
-            name: 'sw6@pp.com'
-          },
-          {
-            id: 1,
-            name: 'sw1@pp.com'
-          },
-          {
-            id: 2,
-            name: 'sw2@pp.com'
-          },
-          {
-            id: 3,
-            name: 'sw3@pp.com'
-          },
-          {
-            id: 4,
-            name: 'sw4@pp.com'
-          },
-          {
-            id: 5,
-            name: 'sw5@pp.com'
-          },
-          {
-            id: 6,
-            name: 'sw6@pp.com'
-          }
-        ];
-
-        renderSelectPP();
-
-        getAccountNumberData();
-        getHandleData();
-        getControversyData();
-        getTopData();
+        // ppList = [
+        //   {
+        //     id: 1,
+        //     name: 'sw1@pp.com'
+        //   },
+        //   {
+        //     id: 2,
+        //     name: 'sw2@pp.com'
+        //   },
+        //   {
+        //     id: 3,
+        //     name: 'sw3@pp.com'
+        //   },
+        //   {
+        //     id: 4,
+        //     name: 'sw4@pp.com'
+        //   },
+        //   {
+        //     id: 5,
+        //     name: 'sw5@pp.com'
+        //   },
+        //   {
+        //     id: 6,
+        //     name: 'sw6@pp.com'
+        //   },
+        //   {
+        //     id: 1,
+        //     name: 'sw1@pp.com'
+        //   },
+        //   {
+        //     id: 2,
+        //     name: 'sw2@pp.com'
+        //   },
+        //   {
+        //     id: 3,
+        //     name: 'sw3@pp.com'
+        //   },
+        //   {
+        //     id: 4,
+        //     name: 'sw4@pp.com'
+        //   },
+        //   {
+        //     id: 5,
+        //     name: 'sw5@pp.com'
+        //   },
+        //   {
+        //     id: 6,
+        //     name: 'sw6@pp.com'
+        //   }
+        // ];
+        //
+        // renderSelectPP();
+        //
+        // getAccountNumberData();
+        // getHandleData();
+        // getControversyData();
+        // getTopData();
       }
     });
   };
@@ -142,127 +162,19 @@
     queryType = queryType ? queryType : 'DP';
     $.ajax({
       type: "GET",
-      url: `/api/displayPlatFrom/get/getAccountNumberData?queryType=${ queryType }&groups=${ ids }`,
+      url: `/api/dashboard/get/paypalAccountdaDataDistribution?type=${ queryType }&accountIds=${ ids }`,
       dataType: "json",
       success: function (data) {
         lineData = data.item.lineData;
         if (lineData.length > 0) {
-          $('#fan-line-content').show();
-          $('.line-no-data').hide();
+          hideNoData('account-number');
           renderAccountNumberData();
         } else {
-          $('#fan-line-content').hide();
-          $('.line-no-data').show();
+          showNoData('account-number');
         }
       },
       error: function (jqXHR) {
-        accountNumberData = [
-          {
-            name: '201810',
-            data: [
-              {
-                name: '李阳事业部-1',
-                value: 10,
-              },
-              {
-                name: '李阳事业部-2',
-                value: 21,
-              },
-              {
-                name: '李阳事业部-3',
-                value: 32,
-              },
-              {
-                name: '李阳事业部-4',
-                value: 63,
-              },
-              {
-                name: '李阳事业部-5',
-                value: 144,
-              }
-            ]
-          },
-          {
-            name: '201811',
-            data: [
-              {
-                name: '李阳事业部-1',
-                value: 120,
-              },
-              {
-                name: '李阳事业部-2',
-                value: 421,
-              },
-              {
-                name: '李阳事业部-3',
-                value: 222,
-              },
-              {
-                name: '李阳事业部-4',
-                value: 153,
-              },
-              {
-                name: '李阳事业部-5',
-                value: 64,
-              }
-            ]
-          },
-          {
-            name: '201812',
-            data: [
-              {
-                name: '李阳事业部-1',
-                value: 40,
-              },
-              {
-                name: '李阳事业部-2',
-                value: 161,
-              },
-              {
-                name: '李阳事业部-3',
-                value: 172,
-              },
-              {
-                name: '李阳事业部-4',
-                value: 83,
-              },
-              {
-                name: '李阳事业部-5',
-                value: 134,
-              }
-            ]
-          },
-          {
-            name: '201901',
-            data: [
-              {
-                name: '李阳事业部-1',
-                value: 340,
-              },
-              {
-                name: '李阳事业部-2',
-                value: 141,
-              },
-              {
-                name: '李阳事业部-3',
-                value: 62,
-              },
-              {
-                name: '李阳事业部-4',
-                value: 173,
-              },
-              {
-                name: '李阳事业部-5',
-                value: 14,
-              }
-            ]
-          },
-        ]
-
-        renderAccountNumberData();
-
-        // $('#fan-line-content').hide();
-        // $('.line-no-data').show();
+        showNoData('account-number');
       }
     });
   }
@@ -271,43 +183,21 @@
   var getControversyData = function (ids = '', queryType) {
     queryType = queryType ? queryType : 'today';
 
-    time = queryTypeMap[ queryType ]();
+    time = queryTypeMap[ queryType ];
     $.ajax({
       type: "GET",
-      url: `/api/displayPlatFrom/get/freshdeskTicketType?time=${ time }&groups=${ ids }`,
+      url: `/api/dashboard/get/paypalDisputeReasonData?time=${ time }&accountIds=${ ids }`,
       dataType: "json",
       success: function (data) {
         lineData = data.item.lineData;
         if (lineData.length > 0) {
-          $('#fan-line-content').show();
-          $('.line-no-data').hide();
-          renderControversyData();
+          hideNoData('controversy');
         } else {
-          $('#fan-line-content').hide();
-          $('.line-no-data').show();
+          showNoData('controversy');
         }
       },
       error: function (jqXHR) {
-        // 扇形图数据
-        controversyData = [
-          { value: 335, name: '李阳-1' },
-          { value: 310, name: '李阳-2' },
-          { value: 234, name: '李阳-3' },
-          { value: 135, name: '李阳-4' },
-          { value: 1548, name: '李阳-5' },
-          { value: 1548, name: '李阳-6' },
-          { value: 1548, name: '李阳-7' },
-          { value: 1548, name: '李阳-8' },
-          { value: 1548, name: '李阳-9' },
-          { value: 1548, name: '李阳-10' },
-          { value: 1548, name: '李阳-11' },
-          { value: 1548, name: '李阳-12' },
-        ];
-
-        renderControversyData();
-
-        // $('#fan-line-content').hide();
-        // $('.line-no-data').show();
+        showNoData('controversy');
       }
     });
   }
@@ -315,189 +205,24 @@
   var getHandleData = function (ids = '', queryType) {
     queryType = queryType ? queryType : 'today';
     // 获取PP处理数据
-    time = queryTypeMap[ queryType ]()
-
-    if (!ids) {
-      // 获取本模块的多选框
-      var checkboxs = $(`.distributeds-checkboxs[data-type='1'] input.checkbox-item:checkbox:checked`);
-
-      var checkboxsids = $.map(checkboxs, function (item) {
-        return $(item).attr('data-id');
-      }).join(',');
-      ids = checkboxsids;
-    }
+    time = queryTypeMap[ queryType ];
 
     $.ajax({
       type: "GET",
-      url: `/api/displayPlatFrom/get/barData?groups=${ ids }&time=${ time }`,
+      url: `/api/dashboard/get/paypalDisputeDealData?accountIds=${ ids }&time=${ time }`,
       dataType: "json",
       success: function (data) {
         barData = data.item.barData;
 
         if (barData.length > 0) {
-          $('#bar-content').show();
-          $('.bar-no-data').hide();
+          hideNoData('handle');
           renderHandleChart();
         } else {
-          $('#bar-content').hide();
-          $('.bar-no-data').show();
+          showNoData('handle');
         }
       },
       error: function (jqXHR) {
-        handleData = [
-          {
-            name: 'DP已处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-          {
-            name: 'DP未处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-          {
-            name: 'BC已处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-          {
-            name: 'BC未处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-          {
-            name: 'CC已处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-          {
-            name: 'CC未处理',
-            data: [
-              {
-                name: 'pp-1@chicv.com',
-                value: 110,
-              },
-              {
-                name: 'pp-2@chicv.com',
-                value: 111,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 112,
-              },
-              {
-                name: 'pp-3@chicv.com',
-                value: 113,
-              },
-              {
-                name: 'pp-4@chicv.com',
-                value: 114,
-              }
-            ]
-          },
-        ];
-
-        renderHandleChart();
+        showNoData('handle');
       }
     });
   }
@@ -506,98 +231,19 @@
   var getTopData = function (ids = '') {
     $.ajax({
       type: "GET",
-      url: `/api/displayPlatFrom/get/getAccountNumberData?groups=${ ids }`,
+      url: `/api/dashboard/get/paypalDisputeDealRankList?accountIds=${ ids }`,
       dataType: "json",
       success: function (data) {
         lineData = data.item.lineData;
         if (lineData.length > 0) {
-          $('#fan-line-content').show();
-          $('.line-no-data').hide();
+          hideNoData('top10');
           renderTopData();
         } else {
-          $('#fan-line-content').hide();
-          $('.line-no-data').show();
+          showNoData('top10');
         }
       },
       error: function (jqXHR) {
-        // 扇形图数据
-        topData = [
-          {
-            id: 1,
-            username: 'username-1',
-            DPFinish: 999,
-            BCFinish: 999,
-            CCFinish: 999,
-          },
-          {
-            id: 2,
-            username: 'username-2',
-            DPFinish: 234,
-            BCFinish: 345,
-            CCFinish: 456,
-          },
-          {
-            id: 3,
-            username: 'username-3',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 4,
-            username: 'username-4',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 5,
-            username: 'username-5',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 6,
-            username: 'username-6',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 7,
-            username: 'username-7',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 8,
-            username: 'username-8',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 9,
-            username: 'username-9',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-          {
-            id: 10,
-            username: 'username-10',
-            DPFinish: 567,
-            BCFinish: 678,
-            CCFinish: 890,
-          },
-        ]
-
-        renderTopData();
-
-        // $('#fan-line-content').hide();
-        // $('.line-no-data').show();
+        showNoData('top10');
       }
     })
   }
