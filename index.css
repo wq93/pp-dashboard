@@ -20,6 +20,41 @@ label {
   cursor: pointer;
 }
 
+.nav li {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #797979;
+  margin-top: 8px;
+  margin-bottom: -1px;
+  background: #fff;
+}
+
+.nav li a {
+  color: inherit;
+  text-decoration: none
+}
+
+.nav li:hover {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+}
+
+.nav li:hover a {
+  color: #fff;
+}
+
+.nav li.active {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+}
+
+.nav li.active:hover {
+  background: #40a9ff;
+  border: 1px solid #40a9ff;
+}
+
+
 .right-operate span {
   display: inline-block;
   padding: 2px 8px;
@@ -78,6 +113,7 @@ label {
   justify-content: space-between;
   width: 100%;
   padding: 12px 0;
+  border-top: 1px solid #797979;
 }
 
 .query-header p {
@@ -135,6 +171,7 @@ label {
   padding: 6px 0 6px 22px;
   font-size: 15px;
 }
+
 #top10-chart li svg {
   width: 28px;
   height: 28px;
